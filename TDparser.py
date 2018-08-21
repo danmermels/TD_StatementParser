@@ -4,7 +4,7 @@ from os import path
 dateA = []
 dateB = []
 desc = []
-Amount = []
+amount = []
 p=0
 payload = ""
 filename = ""
@@ -40,14 +40,17 @@ with open(filename, "r") as f:
             dateA.append(i[:6])
             dateB.append(i[7:13])
             desc.append(i[14:a-1])
-            Amount.append(i[a:])
+            amount.append(i[a:])
             #Build Output Format
-            payload = dateA[p] + "," + dateB[p] + "," + Amount[p] + "," + desc[p]
+            if i[a-1:a] == "-": #check for negative numbers
+                payload = dateA[p] + " 2017," + desc[p] + "," + "," + amount[p] 
+            else:
+                payload = dateA[p] + " 2017," + desc[p] + "," + amount[p]
 
             p = p+1
 
         else :
-            payload = i     
+            payload = "," + i     
 
         #Save to disk    
         filesave(payload,filenameOut)
