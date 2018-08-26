@@ -5,10 +5,13 @@ dateA = []
 dateB = []
 desc = []
 amount = []
+newLine = []
 p=0
 payload = ""
 filename = ""
 filenameOut = ""
+temppayloadA = ""
+temppayloadB = ""
 
 #Define Write to disk Routine
 def filesave(payload,filenameOut):
@@ -34,7 +37,28 @@ if path.exists(filenameOut):
 with open(filename, "r") as f:
     line = f.readline()
     line = line.split("\r")
+
     for i in line:
+        payload = i
+        if len(i) >= 2 and len(i) <= 7 :
+            if temppayloadA == '' :
+                temppayloadA = payload + '  '
+            else:
+                temppayloadB = payload + '  '
+        else :
+            if temppayloadA != '' and temppayloadB != '':
+                payload = temppayloadA  + temppayloadB  + payload
+            if temppayloadA != '' and temppayloadB == '':
+                payload = temppayloadA  + payload
+            #if payload != '':
+            newLine.insert(p,payload)
+            p = p+1
+            temppayloadA = ''
+            temppayloadB = ''
+
+    p = 0
+    print newLine
+    for i in newLine:
         if i[3:4] == " ":
             a = i.find('$')
             dateA.append(i[:6])
@@ -48,11 +72,12 @@ with open(filename, "r") as f:
                 payload = dateA[p] + " 2017," + desc[p] + "," + amount[p]
 
             p = p+1
-
+        
         else :
             payload = "," + i     
 
-        #Save to disk    
+        #Save to disk
+        #if i != '':
         filesave(payload,filenameOut)
 
 print 'Done ! - Put down your drink....'
